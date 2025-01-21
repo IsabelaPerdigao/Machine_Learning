@@ -1,0 +1,63 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.metrics import accuracy_score
+import tkinter as tk
+from tkinter import *
+
+# Carregar o conjunto de dados
+url = "https://raw.githubusercontent.com/datasciencedojo/datasets/master/IMDb%20movies%20csv/IMDb_movies.csv"
+data = pd.read_csv(url)
+
+# Selecionar apenas as colunas necessárias e remover valores nulos
+data = data[['reviews_from_users', 'avg_vote']].dropna()
+
+# Criar a coluna de sentimento (1 para positivo, 0 para negativo)
+data['sentiment'] = data['avg_vote'].apply(lambda x: 1 if x >= 6 else 0)
+
+# Dividir os dados em treino e teste
+X_train, X_test, y_train, y_test = train_test_split(data['reviews_from_users'], data['sentiment'], test_size=0.2, random_state=42)
+
+# Vetorizar o texto
+vectorizer = CountVectorizer()
+X_train_vec = vectorizer.fit_transform(X_train)
+X_test_vec = vectorizer.transform(X_test)
+
+# Treinar o modelo
+model = MultinomialNB()
+model.fit(X_train_vec, y_train)
+
+# Fazer previsões
+y_pred = model.predict(X_test_vec)
+
+# Avaliar o modelo
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Acurácia: {accuracy:.2f}")
+
+# Função para classificar novo texto
+def classificar_texto():
+    texto = input_text.get("1.0", END).strip()
+    if texto:
+        texto_vec = vectorizer.transform([texto])
+        predicao = model.predict(texto_vec)
+        sentimento = "Positivo" if predicao[0] == 1 else "Negativo"
+        resultado_label.config(text=f"Sentimento: {sentimento}")
+    else:
+        resultado_label.config(text="Insira um texto válido.")
+
+# Interface gráfica
+janela = Tk()
+janela.title("Classificador de Sentimentos")
+janela.geometry('400x200')
+
+input_text = Text(janela, height=5, width=50)
+input_text.pack()
+
+classificar_button = Button(janela, text="Classificar Sentimento", command=classificar_texto)
+classificar_button.pack()
+
+resultado_label = Label(janela, text="", font=('Arial', 14))
+resultado_label.pack()
+
+janela.mainloop()
