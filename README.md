@@ -15,7 +15,6 @@ Welcome to my Machine Learning portfolio! My name is **Isabela**, and I have a d
 ### 3. Neural Network with PyTorch
 - **Description:** Implementation of a simple neural network for data classification.
 - **Tools:** PyTorch, NumPy
-- **Link:** [Project on GitHub](#)
 
 
 ## Contact
