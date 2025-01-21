@@ -1,0 +1,21 @@
+
+
+import cv2
+import numpy as np
+from matplotlib import pyplot as plt
+
+# Load image
+img = cv2.imread('imagem.jpg', 0)
+edges = cv2.Canny(img, 100, 200)
+
+# Exibe image and outliners 
+plt.subplot(121), plt.imshow(img, cmap='gray')
+plt.title('Imagem Original'), plt.xticks([]), plt.yticks([])
+plt.subplot(122), plt.imshow(edges, cmap='gray')
+plt.title('Detecção de Bordas'), plt.xticks([]), plt.yticks([])
+
+plt.show()
+
+# Identify responses
+# Generate report 
+# Create a generative report based on the responses
